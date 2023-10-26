@@ -1,0 +1,48 @@
+{
+  "name": "electron-sveltekit-typescript-template",
+  "productName": "Electron + Sveltekit + Typescript template",
+  "version": "1.0.0",
+  "description": "A template project for an Electron app with SvelteKit UI powered by Vite and written with Typescript",
+  "author": "Gurjot Sidhu <contact@thatgurjot.com> (https://thatgurjot.com/)",
+  "homepage": "https://buzo.tools/",
+  "main": "./dist/main.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev npm run dev:all",
+    "dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
+    "dev:svelte": "cd ./renderer/ && vite dev",
+    "dev:electron": "tsc && electron ./dist/main.js",
+    "build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
+    "build:svelte": "cd ./renderer/ && vite build",
+    "build:electron": "tsc && electron-builder build --mac --arm64 --config build.config.json",
+    "postinstall": "electron-builder install-app-deps",
+    "postinstallarm64": "electron-builder install-app-deps --arch arm64",
+    "watch": "tsc -w",
+    "lint": "eslint -c .eslintrc --ext .ts ./src",
+    "start": "npm run build && electron ./dist/main.js"
+  },
+  "repository": "",
+  "keywords": [
+    "template",
+    "electron",
+    "typescript",
+    "svelte",
+    "vite",
+    "electron-builder"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "concurrently": "latest",
+    "cross-env": "latest",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "eslint": "latest",
+    "npm-run-all": "latest",
+    "tslib": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "dependencies": {
+    "electron-serve": "latest"
+  }
+}

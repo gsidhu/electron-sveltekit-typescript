@@ -1,0 +1,26 @@
+{
+	"appId": "com.APPID.com",
+	"productName": "My Cool App",
+	"copyright": "Copyright © 2023 Gurjot Sidhu",
+	"mac": {
+		"category": "public.app-category.productivity",
+		"darkModeSupport": false,
+		"type": "distribution"
+	},
+	"linux": {
+		"target": ["deb", "tar.gz"],
+		"category": "Utility"
+	},
+	"directories": {
+		"output": "production"
+	},
+	"files": [
+    "package.json",
+		"./dist/main.js",
+		"./dist/preload.js",
+		{
+			"from": "./renderer/build",
+			"to": ""
+		}
+	]
+}
