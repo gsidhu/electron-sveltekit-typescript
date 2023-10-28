@@ -1,11 +1,8 @@
 # electron-sveltekit-typescript
 This is a template quick start project for an Electron + SvelteKit app written with TypeScript.
 
-## TODO
-- [ ] check why preload script isn't working as intended
-
 ## Philosophy
-This template breaks the project down into two sub-projects – the Electron app and the SvelteKit app. The Electron app is the "back-end" and the SvelteKit app is the "front-end". The two are connected via [IPC channels](https://www.electronjs.org/docs/latest/tutorial/ipc). This is a very simple and straightforward way to structure an Electron app. It also makes it easy to swap out the front-end for something else if you want to.
+This template breaks the project down into two sub-projects – the Electron app and the SvelteKit app. The Electron app is the "back-end" and the SvelteKit app is the "front-end". The two are connected via [IPC channels](https://www.electronjs.org/docs/latest/tutorial/ipc). This is a straightforward way to structure an Electron app. It also makes it easy to swap out the front-end for something else if you want to.
 
 We use SvelteKit as a [static site generator](https://kit.svelte.dev/docs/adapter-static). This means that the SvelteKit app is _built_ into a static site and served by the Electron app.
 
@@ -33,19 +30,20 @@ We use SvelteKit as a [static site generator](https://kit.svelte.dev/docs/adapte
 Seriously, that's all. There are no other steps. You can run the app with `npm run dev` and build it with `npm run build`. Your built app will be in the `production` folder in root.
 
 ## Very Important Notes
-- The [`src`](src/) folder in the root contains the "back-end" of your Electron app. This is where you'll put all your Electron-specific code. Your main process is in [`src/main.ts`](src/main.ts) and the preload script is in [`src/preload.ts`](src/preload.ts). You can add more files and folders here as you see fit. The [IPC channels](https://www.electronjs.org/docs/latest/tutorial/ipc) have to be set up in the preload script.
+- The [`src`](src/) folder in the root contains the "back-end" of your Electron app. This is where you'll put all your Electron-specific code. Your main process is in [`src/main.ts`](src/main.ts) and the preload script is in [`src/preload.ts`](src/preload.ts). You can add more files and folders here as you see fit. The [IPC channels](https://www.electronjs.org/docs/latest/tutorial/ipc) have to be set up in the preload script. You can see an example of it in the project.
     - The [`package.json`](./package.json) in the root is for the Electron app. This must be a CommonJS module for Electron to work. You _**need**_ to add **TypeScript**, **Vite** and **Electron Builder** as dev dependencies here, and **Electron Serve** as a dependency. All the metadata for your Electron app should go here.
     - The [`build.config.json`](./build.config.json) in the root is for Electron Builder. This is where you configure the build process. You can add more options as you see fit. The [Electron Builder docs](https://www.electron.build/configuration/configuration) are a good place to start. Make sure to set the "files" and "output directory" options as shown in the template. The `files` option adds the _main_ and _preload_ files from Electron and the entire _build_ folder with the static site from SvelteKit to the production build of the app.
-    - The [`tsconfig.json`](./tsconfig.json) in the root is for the Electron app. This is where you configure TypeScript for the Electron app. The 'outDir' option is important. Make sure **it is NOT** the same as the "output directory" option in the `build.config.json`.
+    - The [`tsconfig.json`](./tsconfig.json) in the root is for the Electron app. This is where you configure TypeScript for the Electron app. The 'outDir' option is important. Make sure **it is NOT** the same as the "output directory" option in the `build.config.json`. Also, make sure to add `./global.d.ts` to the `"files"` option to access the global types.
 - The [`renderer`](renderer/) folder in the root contains the "front-end" of your Electron app. This is where you'll put all your SvelteKit code. The main SvelteKit entry point is the [`renderer/src/app.html`](renderer/src/app.html). Everything else is exactly like a normal SvelteKit project.
     - The [`package.json`](./renderer/package.json) in the renderer folder is for the SvelteKit project. This must be a ES6 module for Typescript to work so don't forget to add `"type": "module"` here. You _**need**_ to add **TypeScript**, **SvelteKit** and the **@sveltejs/adapter-static** as dev dependencies here. It doesn't matter what metadata values (name, version, author etc.) you give here because this project is only going to get bundled into a static site. All the metadata for the Electron app is in the root [`package.json`](./package.json).
     - The [`vite.config.ts`](./renderer/vite.config.ts) in the renderer folder is for Vite. This is where you configure Vite for the SvelteKit project. You can just go with the defaults. But remember this has to be a TypeScript (`.ts`) file!
     - The [svelte.config.js](./renderer/svelte.config.js) in the renderer folder is for SvelteKit. This is where you configure SvelteKit for the SvelteKit project. You can just go with the defaults here. The static site will get built into a folder called `build` _inside_ the `renderer` folder.
-    - The [`tsconfig.json`](./renderer/tsconfig.json) in the renderer folder is for the SvelteKit project. This is where you configure TypeScript for the SvelteKit project. The `"extends": "./.svelte-kit/tsconfig.json"` option is important here.
+    - The [`tsconfig.json`](./renderer/tsconfig.json) in the renderer folder is for the SvelteKit project. This is where you configure TypeScript for the SvelteKit project. The `"extends": "./.svelte-kit/tsconfig.json"` option is important here. Make sure to add `../global.d.ts` to the `"files"` option to access the global types.
     - You **must** set `export const ssr = false;` for your SvelteKit routes and layouts. This is because we're using SvelteKit as a static site generator. If you don't do this, you'll get an error when you try to build the app.
 - When you run your app in development mode, the SvelteKit app will be served by Vite. When you build your app for production, the SvelteKit app will be built into a static site and served by Electron Serve. We set two settings to make this work –
     - One, in the [`main.ts`](./src/main.ts) file, we use an if-else block to launc the Vite server in dev mode and serve the static site in production. (See line [#L41](./src/main.ts#L41))
     - Two, in the `npm scripts` in [`package.json`](./package.json), we create a script called `dev:all` that concurrently calls two scripts called `dev:svelte` and `dev:electron`. The `dev:svelte` script first changes the directory to the `renderer` folder and then calls `vite dev`. And the `dev:electron` script first runs typescript (`tsc`) to generate the JS files and then calls `electron ./dist/main.js` - which is the compiled version of the `main.ts`.
+- The [`global.d.ts`](./global.d.ts) file contains the global type definitions for the project. This is where you can add type definitions for any global variables you might need to access in both the `main` and `preload` scripts of Electron and the SvelteKit files.
 
 ## License
 

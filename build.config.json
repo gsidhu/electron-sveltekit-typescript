@@ -1,7 +1,7 @@
 {
 	"appId": "com.APPID.com",
 	"productName": "My Cool App",
-	"copyright": "Copyright © 2023 Gurjot Sidhu",
+	"copyright": "Copyright © 2023 Cool Dude",
 	"mac": {
 		"category": "public.app-category.productivity",
 		"darkModeSupport": false,

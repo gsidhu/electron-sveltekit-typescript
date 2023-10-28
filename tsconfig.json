@@ -11,5 +11,10 @@
   },
   "include": [
     "src/**/*"
+  ],
+  "files": [
+    "./src/main.ts",
+    "./src/preload.ts",
+    "./global.d.ts"
   ]
 }
