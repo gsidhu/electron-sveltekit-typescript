@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import * as path from "path";
 import serve = require('electron-serve');
 
@@ -10,11 +10,16 @@ let mainWindow: BrowserWindow | null;
 
 // Create the main browser window
 function createMainWindow() {
+  console.log(path.join(__dirname, "preload.js"));
+  
   const mainWindow = new BrowserWindow({
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       devTools: true,
+      nodeIntegration: true,
+      contextIsolation: true,
+      sandbox: true
     },
     width: 800,
   });
@@ -42,6 +47,13 @@ function launchMainWindow() {
 	else serveURL(mainWindow);
 }
 
+async function sendProcessVersionsToRender() {
+  const processVersions: ProcessVersions = process.versions;
+  console.log("sending processVersions to IPC to pass on to renderer");
+  return processVersions;
+	// mainWindow.webContents.send('system:sendProcessVersions', processVersions);
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -64,5 +76,12 @@ app.on("window-all-closed", () => {
   }
 });
 
-// In this file you can include the rest of your app"s specific main process
+// In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+app.once('ready', () => {  
+  ipcMain.handle('renderer:requestProcessVersions', (event) => {
+    console.log("Renderer is asking for process versions");
+    const versionsToSend = sendProcessVersionsToRender();
+    return versionsToSend;
+  });
+});
