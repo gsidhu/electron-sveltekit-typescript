@@ -25,9 +25,13 @@ We use SvelteKit as a [static site generator](https://kit.svelte.dev/docs/adapte
 - [Prettier](https://prettier.io/)
 
 ## Getting Started
-1. **Clone the repo and get started.**
+1. **Clone this repo.** Or download it as a zip file and extract it.
+2. **Install the dependencies.** Run `npm install` in the root folder and the `renderer` folder.
+3. **Start the dev server.** Run `npm run dev` in the root folder. This will start the Vite server and the Electron app in dev mode.
 
-Seriously, that's all. There are no other steps. You can run the app with `npm run dev` and build it with `npm run build`. Your built app will be in the `production` folder in root.
+Seriously, that's all. There are no other steps. 
+
+You run the app with `npm run dev` and build it with `npm run build`. Your built app will be in the `production` folder in root.
 
 ## Very Important Notes
 - The [`src`](src/) folder in the root contains the "back-end" of your Electron app. This is where you'll put all your Electron-specific code. Your main process is in [`src/main.ts`](src/main.ts) and the preload script is in [`src/preload.ts`](src/preload.ts). You can add more files and folders here as you see fit. The [IPC channels](https://www.electronjs.org/docs/latest/tutorial/ipc) have to be set up in the preload script. You can see an example of it in the project.
@@ -46,5 +50,4 @@ Seriously, that's all. There are no other steps. You can run the app with `npm r
 - The [`global.d.ts`](./global.d.ts) file contains the global type definitions for the project. This is where you can add type definitions for any global variables you might need to access in both the `main` and `preload` scripts of Electron and the SvelteKit files.
 
 ## License
-
 [CC0 1.0 (Public Domain)](LICENSE.md)
